@@ -21,7 +21,7 @@ const Home: NextPage = () => {
     if (session) {
       router.push('/Dashboard')
     }
-    router.push('/')
+
 
   }, [session])
 

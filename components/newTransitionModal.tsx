@@ -1,10 +1,15 @@
 
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react';
+import { Dialog, Transition, Listbox } from '@headlessui/react'
+import { FormEvent, Fragment, useState } from 'react';
 
 import Image from 'next/image';
 import Income from '../public/Entradas.svg';
 import Expense from '../public/Saídas.svg';
+
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { useSession } from 'next-auth/react';
+import router from 'next/router';
 
 interface ModalTransitionsProps {
     isOpen: boolean;
@@ -13,6 +18,25 @@ interface ModalTransitionsProps {
 
 const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
 
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [category, setCategory] = useState('');
+    const [type, setType] = useState('income');
+
+    const { data: session } = useSession()
+
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+        const month = (new Date().getMonth() + 1).toString();
+        const fullYear = (new Date().getFullYear()).toString().slice(-2);
+        const todosRef = collection(db, `wallets/${String(session?.user?.email)}/`, fullYear);
+        await setDoc(doc(todosRef), { name, price, category, type, month })
+
+
+
+        router.reload();
+    }
+
     function closeModal() {
         setIsOpen(false)
     }
@@ -20,7 +44,6 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
     function openModal() {
         setIsOpen(true)
     }
-    const [type, setType] = useState('income');
 
     return (
         <>
@@ -68,10 +91,10 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
                                     Cadastrar Transação
                                 </Dialog.Title>
                                 <div className="mt-2">
-                                    <input type='text' placeholder='Nome' className='w-full rounded-md bg-[#D7D7D7] border-none' />
+                                    <input type='text' value={name} onChange={(value) => setName(value.target.value)} placeholder='Nome' className='w-full rounded-md bg-[#D7D7D7] border-none' />
                                 </div>
                                 <div className="mt-2">
-                                    <input type='text' placeholder='Preço' className='w-full rounded-md bg-[#D7D7D7] border-none' />
+                                    <input type='number' value={price} onChange={(value) => setPrice(value.target.value)} placeholder='Preço' className='w-full rounded-md bg-[#D7D7D7] border-none' />
                                 </div>
                                 <div className="mt-2 flex justify-between">
                                     <button onClick={() => setType('income')} className={`btn-type ${type === 'income' ? 'bg-[#12A454] bg-opacity-[0.1]' : ''}`}>
@@ -84,11 +107,13 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
                                     </button>
                                 </div>
                                 <div className="mt-2">
-                                    <input type='text' placeholder='Categoria' className='w-full rounded-md bg-[#D7D7D7] border-none' />
+                                    <input value={category} onChange={(value) => setCategory(value.target.value)} type='text' placeholder='Categoria' className='w-full rounded-md bg-[#D7D7D7] border-none' />
+
                                 </div>
+
                                 <div className="mt-4 mb-6">
                                     <button
-
+                                        onClick={handleSubmit}
                                         type="button"
                                         className="w-full px-4 py-3 text-sm font-medium text-white bg-total-card border border-transparent rounded-md hover:brightness-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
 
