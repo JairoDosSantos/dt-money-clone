@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base{
+    body{
+        @apply bg-body
+    }
+}
+
+@layer components{
+    .card-white-summary{
+        @apply flex flex-col h-[8.5rem] w-[22rem] bg-white rounded p-6
+    };
+    .table-item{
+        @apply text-table-tittle w-full bg-white flex flex-wrap justify-between rounded-md 
+    };
+    .btn-type{
+       @apply flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 w-1/2 rounded-md hover:brightness-75
+    }
+}
