@@ -93,7 +93,7 @@ const Transiction = () => {
                 <p><strong>Type of transiction</strong>: <span className='text-gray-400 first-letter:uppercase'>{transiction?.type}</span></p>
                 <p><strong>Transiction's name</strong>:<span className='text-gray-400 first-letter:uppercase'> {transiction?.name}</span></p>
                 <p><strong>Total amount</strong>:<span className='text-gray-400 first-letter:uppercase'> {price ? Number(price).toLocaleString('pt', { style: 'currency', currency: 'kwz' }) : ''}</span></p>
-                <p><strong>Date of transiction</strong>:<span className='text-gray-400 first-letter:uppercase'> {`${Month[Number(transiction?.month) - 1]}/${transiction?.year}`}</span></p>
+                <p><strong>Date of transaction</strong>:<span className='text-gray-400 first-letter:uppercase'> {`${Month[Number(transiction?.month) - 1]}/${transiction?.year}`}</span></p>
             </div>
             <div className='flex justify-end items-end gap-3 p-2 max-h-56 h-56  mt-2 w-full print:hidden'>
                 <button onClick={handleDeleteTransaction} className='px-4 py-2 border rounded font-semibold bg-header text-white hover:brightness-75 hover:transform hover:transition-all flex items-center justify-around'>

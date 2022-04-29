@@ -4,10 +4,23 @@ import Link from 'next/link'
 
 import { useTransition } from '../hooks/useTransitionHook';
 
+interface TransitionParams {
+    type: String;
+    category: String;
+    price: number;
+    month: Number;
+    name: String;
+    id: String;
+    year: Number
+}
+
+
 const TransitionTable: React.FC = () => {
 
+    //HOOK contains all transactions
     const transitons = useTransition();
-    const Month = [
+
+    const MONTH = [
         "janeiro",
         "fevereiro",
         "março",
@@ -19,6 +32,19 @@ const TransitionTable: React.FC = () => {
         "novembro",
         "dezembro"
     ]
+
+    const TRANSACTIONS_MAX_LENGHT = 8;
+    const transactions = new Array<TransitionParams>();
+    let array_lenght = 0;
+
+    transitons.forEach(transaction => {
+        if (array_lenght < TRANSACTIONS_MAX_LENGHT) {
+            transactions.push(transaction)
+            array_lenght++;
+        }
+    })
+
+
     return (
         <div className=' max-w-[70rem] min-h-min  my-10 mx-auto  overflow-auto '>
             <table
@@ -32,7 +58,7 @@ const TransitionTable: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody className='text-center flex flex-col space-y-2 w-full'>
-                    {transitons.map((transition, index) => {
+                    {transactions.map((transition, index) => {
                         return (
                             <tr className='table-item' key={index}>
                                 <td className='table-td text-left cursor-pointer'>
@@ -53,7 +79,7 @@ const TransitionTable: React.FC = () => {
                                                 currency: 'KWZ'
                                             })}`}</td>
                                 <td className='table-td'>{transition.category}</td>
-                                <td className='table-td first-letter:uppercase'>{`${Month[Number(transition.month) - 1]}/${transition.year}`}</td>
+                                <td className='table-td first-letter:uppercase'>{`${MONTH[Number(transition.month) - 1]}/${transition.year}`}</td>
                             </tr>
                         )
                     })
