@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base{
     body{
-        @apply bg-body
+        @apply bg-body font-roboto
     }
 }
 
@@ -17,5 +19,8 @@
     };
     .btn-type{
        @apply flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 w-1/2 rounded-md hover:brightness-75
+    };
+    .table-td{
+        @apply p-2 w-1/4
     }
 }

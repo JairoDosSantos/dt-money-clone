@@ -11,8 +11,12 @@ module.exports = {
         'body':'#E5E5E5',
         'total-card':'#33CC95',
         'table-tittle':'#969CB2'
+      },
+      fontFamily:{
+        'roboto':['Roboto', 'sans-serif']
       }
     },
+    
   },
   plugins: [
     require('@tailwindcss/forms'),

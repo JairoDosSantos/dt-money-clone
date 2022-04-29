@@ -11,10 +11,13 @@ import Header from '../components/header'
 import NewTransitionModal from '../components/newTransitionModal'
 import Summary from '../components/summary'
 import TransitionTable from '../components/transitionTable'
+import { TransitionProvider } from '../hooks/useTransitionHook'
+import SearchComponent from '../components/searchTransiction'
 
 
 const DashBoard: NextPage = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const [searchModal, setSearchModal] = useState(false);
     const router = useRouter();
     const { data: session } = useSession()
 
@@ -26,16 +29,21 @@ const DashBoard: NextPage = () => {
     return (
         <div>
             <Head>
-                <title>Dashboard | CJmoney</title>
+                <title>Dashboard | My Wallet</title>
                 <link rel="icon" href="/Logo1.svg" />
             </Head>
 
 
+            <TransitionProvider>
 
-            <Header setIsOpen={setIsOpen} />
-            <Summary />
-            <NewTransitionModal isOpen={isOpen} setIsOpen={setIsOpen} />
-            <TransitionTable />
+                <Header setIsOpen={setIsOpen} searchOpenModal={setSearchModal} />
+                <Summary />
+                <SearchComponent setSearchOpenModal={setSearchModal} searchOpenModal={searchModal} />
+                <NewTransitionModal isOpen={isOpen} setIsOpen={setIsOpen} />
+                <TransitionTable />
+
+            </TransitionProvider>
+
         </div>
     )
 }
