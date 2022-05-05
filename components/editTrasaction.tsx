@@ -2,10 +2,13 @@
 import { Dialog, Transition, Listbox } from '@headlessui/react'
 import { FormEvent, Fragment, useEffect, useState } from 'react';
 
+//Images
 import Image from 'next/image';
 import Income from '../public/Entradas.svg';
 import Expense from '../public/Saídas.svg';
+import Load from '../public/load.svg';
 
+//Firebase
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useSession } from 'next-auth/react';
@@ -46,9 +49,9 @@ const EditTransactionModal = ({ isOpen, setIsOpen, transaction }: ModalTransitio
     const [type, setType] = useState("");
 
 
-    //success state
-
+    //Other states
     const [show, setShow] = useState('hidden')
+    const [isLoad, setIsLoad] = useState(false)
 
     //This effect will work after open the modal
     useEffect(() => {
@@ -69,7 +72,9 @@ const EditTransactionModal = ({ isOpen, setIsOpen, transaction }: ModalTransitio
         const newYear = new Date().getFullYear().toString().slice(-2);
         const years = year?.toString().slice(-2) ?? newYear;
         const walletsRef = collection(db, `wallets/${String(session?.user?.email)}/${years}`);
+        setIsLoad(true)
         await setDoc(doc(walletsRef, String(id)), { name, price, category, type, month: transaction.month, year: year })
+        setIsLoad(false)
         setShow('')
     }
 
@@ -162,9 +167,11 @@ const EditTransactionModal = ({ isOpen, setIsOpen, transaction }: ModalTransitio
                                     <button
                                         onClick={handleEditSubmit}
                                         type="button"
-                                        className="w-full px-4 py-3 text-sm font-medium text-white bg-total-card border border-transparent rounded-md hover:brightness-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                        disabled={isLoad ? true : false}
+                                        className="flex justify-center disabled:cursor-not-allowed disabled:bg-total-card/50 items-center w-full px-4 py-3 text-sm font-medium text-white bg-total-card border border-transparent rounded-md hover:brightness-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
 
                                     >
+                                        {isLoad && <Image height={35} width={35} src={Load} />}
                                         Alterar
                                     </button>
                                 </div>

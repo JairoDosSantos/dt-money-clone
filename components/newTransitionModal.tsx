@@ -2,10 +2,13 @@
 import { Dialog, Transition, Listbox } from '@headlessui/react'
 import { FormEvent, Fragment, useState } from 'react';
 
+//Images
 import Image from 'next/image';
 import Income from '../public/Entradas.svg';
 import Expense from '../public/Saídas.svg';
+import Load from '../public/load.svg';
 
+//Firebase
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useSession } from 'next-auth/react';
@@ -20,12 +23,16 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
 
     const { data: session } = useSession()
 
+    //Others States
+    const [show, setShow] = useState('hidden')
+    const [isLoad, setIsLoad] = useState(false)
+
+    //Properties
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [type, setType] = useState('income');
 
-    const [show, setShow] = useState('hidden')
 
     async function handleSubmit(event: FormEvent) {
 
@@ -34,8 +41,10 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
         const month = (new Date().getMonth() + 1).toString();
         const fullYear = (new Date().getFullYear()).toString().slice(-2);
         const walletsRef = collection(db, `wallets/${String(session?.user?.email)}/${fullYear}`,);
+        setIsLoad(true)
         await setDoc(doc(walletsRef), { name, price, category, type, month, year: fullYear })
         setShow('')
+        setIsLoad(false)
 
     }
 
@@ -92,7 +101,7 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
                                     className="text-lg font-medium leading-6 text-gray-900 my-4"
                                 >
                                     Cadastrar Transação
-                                    <div className={`my-1 p-2 text-[#12A454] border border-[#12A454] rounded text-center ${show} transform transition-all animate-bounce`}>TTransaction added successfully!</div>
+                                    <div className={`my-1 p-2 text-[#12A454] border border-[#12A454] rounded text-center ${show} transform transition-all animate-bounce`}>Transaction added successfully!</div>
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <input type='text' value={name} onChange={(value) => setName(value.target.value)} placeholder='Nome' className='w-full rounded-md bg-[#D7D7D7] border-none' />
@@ -128,9 +137,11 @@ const NewTransitionModal = ({ isOpen, setIsOpen }: ModalTransitionsProps) => {
                                     <button
                                         onClick={handleSubmit}
                                         type="button"
-                                        className="w-full px-4 py-3 text-sm font-medium text-white bg-total-card border border-transparent rounded-md hover:brightness-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                        disabled={isLoad ? true : false}
+                                        className="flex justify-center items-center disabled:cursor-not-allowed disabled:bg-total-card/50 w-full px-4 py-3 text-sm font-medium text-white bg-total-card border border-transparent rounded-md hover:brightness-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
 
                                     >
+                                        {isLoad && <Image height={35} width={35} src={Load} />}
                                         Cadastrar
                                     </button>
                                 </div>
